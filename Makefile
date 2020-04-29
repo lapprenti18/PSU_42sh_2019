@@ -59,7 +59,7 @@ SRC	=	lib/my/my_putnbr_base.c	\
 		lib/my/my_print_x.c	\
 		lib/my/my_printf.c
 
-NAME	=	mysh
+NAME	=	42sh
 
 COMP	=	src/main.c	\
 			src/minishell_loop.c	\
