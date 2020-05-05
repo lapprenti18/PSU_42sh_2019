@@ -11,7 +11,8 @@ int my_check_sep(char *buffer)
 {
     for (int position = 0; buffer[position]; position += 1) {
         if (buffer[position] == '|' || buffer[position] == ';' || \
-        buffer[position] == '<' || buffer[position] == '>')
+        buffer[position] == '<' || buffer[position] == '>' || \
+        buffer[position] == '&')
             return (1);
     }
     return (0);
@@ -46,9 +47,29 @@ int check_for_pipe(buffer_t *buff)
     return (0);
 }
 
-int check_for_redirect(char c)
+int check_for_double(buffer_t *buff, int position, int temp)
 {
-    return ((c == '>') || (c == '<') || (c == '|'));
+    for (position = 0; buff->buffer[position]; position += 1) {
+        if (buff->buffer[position] == '|' && \
+        (position > 0 && buff->buffer[position - 1] == '|'))
+            temp = position;
+    }
+    if (temp) {
+        buff->buffer[temp] = '\r';
+        buff->buffer[temp - 1] = '\r';
+        return (7);
+    }
+    for (position = 0; buff->buffer[position]; position += 1) {
+        if (buff->buffer[position] == '&' && \
+        (position > 0 && buff->buffer[position - 1] == '&'))
+            temp = position;
+    }
+    if (temp) {
+        buff->buffer[temp] = '\r';
+        buff->buffer[temp - 1] = '\r';
+        return (6);
+    }
+    return (lasts_checks(buff, 0, 0));
 }
 
 int my_change_buffer(buffer_t *buff)
@@ -64,5 +85,5 @@ int my_change_buffer(buffer_t *buff)
         buff->buffer[temp] = '\r';
         return (1);
     }
-    return (lasts_checks(buff, 0));
+    return (check_for_double(buff, 0, 0));
 }

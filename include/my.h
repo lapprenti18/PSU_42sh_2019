@@ -36,6 +36,7 @@ typedef struct nodes_s
     char *name;
     char *value;
     struct nodes_s *next;
+    int ret_value;
 }node_t;
 
 typedef struct tree_s
@@ -63,9 +64,13 @@ typedef struct sep_s
     void (*ptr)(tree_t *, node_t *);
 } sep_t;
 
+int good_return(char save, int ret, int temp, buffer_t *buff);
+void exec_double_pipe(tree_t *tree, node_t *env_list);
+void exec_simple(char *command, node_t *env_list, char **tab, int fds[2]);
 void little_print(void);
+void exec_double_and(tree_t *tree, node_t *env_list);
 int check_for_redirect(char c);
-int lasts_checks(buffer_t *buff, int ret);
+int lasts_checks(buffer_t *buff, int ret, int position);
 void execute_pipe(tree_t *tree, node_t *env_list);
 void exec_double(tree_t *tree, node_t *env_list);
 void exec_redirect_right(tree_t *tree, node_t *env_list);

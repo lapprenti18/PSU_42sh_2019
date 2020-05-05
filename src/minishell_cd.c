@@ -59,6 +59,6 @@ int my_own_cd(node_t *env_list, char *buffer)
         my_own_setenv(env_list, "setenv PWD /home");
         return (my_ret(0, comm));
     }
-    (my_return_norm(comm, size) == 0) ? save = my_strdup(turn) : 0;
-    return (0);
+    ((size = my_return_norm(comm, size)) == 0) ? save = my_strdup(turn) : 0;
+    return (size);
 }

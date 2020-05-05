@@ -32,9 +32,19 @@ tree_t *insert(tree_t *my_tree, char *command, int separator)
     return (my_tree);
 }
 
+tree_t *next_step(tree_t *my_tree, buffer_t *buff)
+{
+    char **tab = my_str_to_word_array(buff->buffer, "\n\r");
+
+    for (int cursor = 0; tab[cursor]; cursor += 1) {
+        buff->buffer = tab[cursor];
+        my_tree = obtain_good_tree(buff, cursor, my_tree);
+    }
+    return (my_tree);
+}
+
 tree_t *my_binary_tree(buffer_t *buff, tree_t *my_tree)
 {
-    char **tab = NULL;
     int pos = my_change_buffer(buff);
 
     if (pos == 1)
@@ -47,12 +57,9 @@ tree_t *my_binary_tree(buffer_t *buff, tree_t *my_tree)
         my_tree = insert(my_tree, "<", 0);
     if (pos == 5)
         my_tree = insert(my_tree, "|", 0);
-    tab = my_str_to_word_array(buff->buffer, "\n\r");
-    for (int cursor = 0; tab[cursor]; cursor += 1) {
-        buff->buffer = tab[cursor];
-        my_tree = obtain_good_tree(buff, cursor, my_tree);
-        free (tab[cursor]);
-    }
-    free (tab);
-    return (my_tree);
+    if (pos == 6)
+        my_tree = insert(my_tree, "&&", 0);
+    if (pos == 7)
+        my_tree = insert(my_tree, "||", 0);
+    return (next_step(my_tree, buff));
 }

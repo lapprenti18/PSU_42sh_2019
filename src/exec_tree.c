@@ -7,17 +7,20 @@
 
 #include "../include/my.h"
 
-static sep_t sep_tab[5] =
+static sep_t sep_tab[7] =
 {
     {";", exec_double},
     {"|", execute_pipe},
     {">", exec_redirect_right},
     {"<", exec_redirect_left},
-    {">>", exec_double_redirect_right}
+    {">>", exec_double_redirect_right},
+    {"&&", exec_double_and},
+    {"||", exec_double_pipe}
 };
 
-void close_and_dup(int new_fds[2], int fds[2])
+void close_and_dup(int new_fds[2], int fds[2], node_t *env_list, pid_t pid)
 {
+    env_list->ret_value = pid;
     close(fds[1]);
     dup2(new_fds[0], 0);
     dup2(new_fds[1], 1);
@@ -44,7 +47,7 @@ void exec_simple(char *command, node_t *env_list, char **tab, int fds[2])
         exit(0);
     } else
         wait(&pid);
-    close_and_dup(new_fds, fds);
+    close_and_dup(new_fds, fds, env_list, pid);
     simple_ending(str, exec_tab, tab, pid);
 }
 
@@ -81,7 +84,7 @@ int parse_tree(tree_t *tree, node_t *env_list)
         return (1);
     if (check_own(tree->command, env_list, tree->pipefds) || !tree->command)
         return (1);
-    while (index < 5) {
+    while (index < 7) {
         if (!my_strcmp(sep_tab[index].sep, tree->command)) {
             sep_tab[index].ptr(tree, env_list);
             return (1);

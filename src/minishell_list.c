@@ -33,6 +33,7 @@ node_t *get_new_node(char *env)
 
     node->name = my_special_dup(env);
     node->value = my_special_dup(&env[len + 1]);
+    node->ret_value = 0;
     node->next = NULL;
     return (node);
 }

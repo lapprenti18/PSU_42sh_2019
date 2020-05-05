@@ -17,8 +17,11 @@ char *easy_ret(char *str)
 int my_ret(int number, char **tab)
 {
     if (number == 84) {
-        if (tab[1])
-            my_printf("%s: %s.\n", tab[1], strerror(errno));
+        if (tab[1]) {
+            my_printf("%s: ", tab[1]);
+            my_printf((errno == ENOTDIR) ? \
+            "Not a directory.\n" : "No such file or directory.\n");
+        }
     }
     my_free_tab(tab);
     return (number);

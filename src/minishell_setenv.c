@@ -70,7 +70,7 @@ int my_own_setenv(node_t *env_list, char *buffer)
         return (my_own_env(env_list, buffer));
     if (len_tab >= 4) {
         my_printf("setenv: Too many arguments\n");
-        return (0);
+        return (84);
     }
     if (is_alp(tab[1][0]) || tab[1][0] == '_')
         return (easy_setenv(env_list, tab));
@@ -78,5 +78,5 @@ int my_own_setenv(node_t *env_list, char *buffer)
     for (int cursor = 0; tab[cursor]; cursor += 1)
         free (tab[cursor]);
     free (tab);
-    return (0);
+    return (84);
 }

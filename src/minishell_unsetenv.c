@@ -7,6 +7,11 @@
 
 #include "../include/my.h"
 
+int check_for_redirect(char c)
+{
+    return ((c == '>') || (c == '<') || (c == '|') || (c == '&'));
+}
+
 int my_find_name(char *name, node_t *env_list)
 {
     if (env_list && !my_strcmp(env_list->name, name))
@@ -41,7 +46,7 @@ int my_own_unsetenv(node_t *env_list, char *buffer)
     for (; tab[len_tab]; len_tab += 1);
     if (len_tab == 1) {
         my_printf("unsetenv: Too few arguments.\n");
-        return (0);
+        return (84);
     }
     for (int current = 0; tab[current]; current += 1)
         my_find_name(tab[current], env_list);

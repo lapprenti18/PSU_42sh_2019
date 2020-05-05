@@ -16,29 +16,38 @@ static my_binaries_t tab[5] =
     {"exit", my_own_exit}
 };
 
-int lasts_checks(buffer_t *buff, int ret)
+int good_return(char save, int ret, int temp, buffer_t *buff)
 {
-    int position = 0;
+    if (temp) {
+        save = buff->buffer[temp];
+        buff->buffer[temp] = '\r';
+        if (ret == 3 || ret == 9 || ret == 10)
+            buff->buffer[temp - 1] = '\r';
+    }
+    if (save == '|')
+        return (5);
+    if (save == '<')
+        return (4);
+    if (save == '>')
+        return (ret == 3) ? 3 : 2;
+    return (0);
+}
+
+int lasts_checks(buffer_t *buff, int ret, int position)
+{
     int temp = 0;
     char save = 0;
 
     for (position = 0; buff->buffer[position]; position += 1) {
-        if (check_for_redirect(buff->buffer[position]))
+        if (check_for_redirect(buff->buffer[position])) {
             temp = position;
-        if (buff->buffer[position] == '>' && \
-        (position > 0 && buff->buffer[position - 1] == '>')) {
-            temp = position;
-            ret = 3;
+            ret = 0;
         }
+        if (buff->buffer[position] == '>' && \
+        (position > 0 && buff->buffer[position - 1] == '>'))
+            ret = 3;
     }
-    if (temp) {
-        save = buff->buffer[temp];
-        buff->buffer[temp] = '\r';
-        if (ret == 3)
-            buff->buffer[temp - 1] = '\r';
-    }
-    return ((save == '|') ? 5 : (save == '<') ? 4 : \
-    (ret == 3) ? 3 : (save == '>') ? 2 : 0);
+    return (good_return(save, ret, temp, buff));
 }
 
 void my_draw_prompt(void)
@@ -59,7 +68,7 @@ int check_own(char *buffer, node_t *env_list, int fds[2])
         if (my_strcmp(tab[i].command, buffer) == 0) {
             dup2(fds[0], 0);
             dup2(fds[1], 1);
-            tab[i].ptr(env_list, buffer);
+            env_list->ret_value = (tab[i].ptr(env_list, buffer) == 84) ? -1 : 0;
             return (1);
         }
     }
