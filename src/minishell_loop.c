@@ -91,7 +91,6 @@ int minishell_loop(node_t *env_list, store_t *store)
             my_draw_prompt();
         if (getline(&buffer, &size, stdin) == -1)
             return (my_tty());
-        buffer = change_buffer(buffer, store);
         if (!buffer)
             continue;
         buff.buffer = buffer;

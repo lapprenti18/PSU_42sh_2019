@@ -7,6 +7,21 @@
 
 #include "../include/my.h"
 
+char *read_file(char *filepath)
+{
+    int fd = open(filepath, O_RDONLY);
+    char *buffer = malloc(sizeof(char) * 1000);
+    int bytes = 0;
+
+    if (!fd)
+        return (NULL);
+    memset(buffer, 0, 1000);
+    bytes = read(fd, buffer, 999);
+    if (!bytes)
+        return (NULL);
+    return (buffer);
+}
+
 char **my_tab_special(char **tab)
 {
     char **tabdup = NULL;

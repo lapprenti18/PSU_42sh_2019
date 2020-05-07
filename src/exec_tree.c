@@ -82,9 +82,6 @@ int parse_tree(tree_t *tree, node_t *env_list, store_t *store)
 
     if (!tree)
         return (1);
-    if (check_own(tree->command, env_list, tree->pipefds, store) \
-    || !tree->command)
-        return (1);
     while (index < 7) {
         if (!my_strcmp(sep_tab[index].sep, tree->command)) {
             sep_tab[index].ptr(tree, env_list, store);
@@ -92,7 +89,11 @@ int parse_tree(tree_t *tree, node_t *env_list, store_t *store)
         }
         index += 1;
     }
+    tree->command = change_buffer(tree->command, store);
     tab = my_str_to_word_array(tree->command, " \t\n");
+    if (check_own(tree->command, env_list, tree->pipefds, store) \
+    || !tree->command)
+        return (1);
     exec_simple(tree->command, tab, tree->pipefds, store);
     return (1);
 }

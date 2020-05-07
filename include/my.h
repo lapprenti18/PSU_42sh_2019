@@ -24,6 +24,7 @@
 #include <string.h>
 #include <sys/sysmacros.h>
 #include <signal.h>
+#include <stdbool.h>
 
 typedef struct format_t
 {
@@ -36,6 +37,7 @@ typedef struct alias_s
     char *prev;
     char *new;
     struct alias_s *next;
+    bool loop;
 } alias_t;
 
 typedef struct nodes_s
@@ -78,6 +80,7 @@ typedef struct sep_s
     void (*ptr)(tree_t *, node_t *, store_t *);
 } sep_t;
 
+char *read_file(char *filepath);
 char *change_buffer(char *buffer, store_t *store);
 int my_alias(node_t *env_list, char *buffer, store_t *store);
 alias_t *get_list_from_file(void);
