@@ -50,30 +50,31 @@ void special_insert(node_t *env_list, char **tab)
         temp->next = new;
 }
 
-int easy_setenv(node_t *env_list, char **tab)
+int easy_setenv(node_t *env_list, char **tab, store_t *store)
 {
     for (int current = 0; tab[1][current]; current += 1) {
         if (!is_num(tab[1][current]))
             return (norm_print());
     }
     special_insert(env_list, tab);
+    special_insert(store->memory_env, tab);
     return (0);
 }
 
-int my_own_setenv(node_t *env_list, char *buffer)
+int my_own_setenv(node_t *env_list, char *buffer, store_t *store)
 {
     char **tab = my_str_to_word_array(buffer, " \t\n");
     int len_tab = 0;
 
     for (len_tab = 0; tab[len_tab]; len_tab += 1);
     if (len_tab == 1)
-        return (my_own_env(env_list, buffer));
+        return (my_own_env(env_list, buffer, store));
     if (len_tab >= 4) {
         my_printf("setenv: Too many arguments\n");
         return (84);
     }
     if (is_alp(tab[1][0]) || tab[1][0] == '_')
-        return (easy_setenv(env_list, tab));
+        return (easy_setenv(env_list, tab, store));
     my_printf("setenv: Variable name must begin with a letter\n");
     for (int cursor = 0; tab[cursor]; cursor += 1)
         free (tab[cursor]);

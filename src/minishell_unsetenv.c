@@ -36,11 +36,12 @@ int is_num(char c)
     (c <= '0' && c >= '9') || c == '_');
 }
 
-int my_own_unsetenv(node_t *env_list, char *buffer)
+int my_own_unsetenv(node_t *env_list, char *buffer, store_t *store)
 {
     char **tab = my_str_to_word_array(buffer, " \t\n");
     int len_tab = 0;
 
+    (void)store;
     if (!env_list)
         return (0);
     for (; tab[len_tab]; len_tab += 1);

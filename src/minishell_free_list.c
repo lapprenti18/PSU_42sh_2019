@@ -7,11 +7,11 @@
 
 #include "../include/my.h"
 
-void exec_double_and(tree_t *tree, node_t *env_list)
+void exec_double_and(tree_t *tree, node_t *env_list, store_t *store)
 {
-    parse_tree(tree->left, env_list);
+    parse_tree(tree->left, env_list, store);
     if (env_list->ret_value != -1 && !WEXITSTATUS(env_list->ret_value))
-        parse_tree(tree->right, env_list);
+        parse_tree(tree->right, env_list, store);
 }
 
 int simple_ending(char *str, char **exec_tab, char **tab, pid_t pid)

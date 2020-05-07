@@ -9,8 +9,10 @@
 
 char *easy_ret(char *str)
 {
+    char **tab = my_str_to_word_array(str, " \t");
+
     if (str)
-        my_printf("%s: Command not found.\n", str);
+        my_printf("%s: Command not found.\n", tab[0]);
     return (NULL);
 }
 
@@ -47,8 +49,8 @@ char *my_special_str_dup(char *env, char *buffer)
     for (int current = 0; env[current] && env[current] != ':'; current += 1)
         path[current] = env[current];
     path[malloc_size] = '\0';
-    path = my_strcat(path, "/", 0);
-    path = my_strcat(path, buffer, 0);
+    path = my_strcat(path, "/");
+    path = my_strcat(path, buffer);
     return (path);
 }
 
@@ -57,7 +59,7 @@ char *my_get_good_bin(char *env, char *buffer)
     char *result = NULL;
     char **tab = my_str_to_word_array(buffer, " \t\n");
 
-    if (!buffer || !env)
+    if (!buffer || !env || !my_strcmp(env, "/"))
         return (easy_ret(buffer));
     if (access(tab[0], X_OK) == 0) {
         return (tab[0]);

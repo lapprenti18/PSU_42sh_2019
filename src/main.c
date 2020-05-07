@@ -13,8 +13,8 @@ char **my_tab_special(char **tab)
     char *cat = NULL;
 
     for (int current = 0; tab[current]; current += 1) {
-        cat = my_strcat(cat, tab[current], 0);
-        cat = my_strcat(cat, " ", 0);
+        cat = my_strcat(cat, tab[current]);
+        cat = my_strcat(cat, " ");
     }
     tabdup = my_str_to_word_array(cat, " ");
     if (cat)
@@ -39,11 +39,13 @@ void my_memset(char *buffer, int size, char c)
 
 int main(int ac, char *av[], char **env)
 {
-    node_t *nodes = NULL;
+    store_t store;
 
-    nodes = my_env_to_list(nodes, env);
+    store.alias = get_list_from_file();
+    store.memory_env = my_env_to_list(NULL, env);
+    store.env_list = my_env_to_list(NULL, env);
     signal(SIGINT, sigint_handler);
     if (!av[0] || ac != 1)
         return (84);
-    return (minishell_loop(nodes));
+    return (minishell_loop(store.env_list, &store));
 }

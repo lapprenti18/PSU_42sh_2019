@@ -25,20 +25,20 @@ int my_return_norm(char **comm, int size)
     return (my_ret(84, comm));
 }
 
-int my_special_cd(char *save, char **comm, node_t *env_list)
+int my_special_cd(char *save, char **comm, node_t *env_list, store_t *store)
 {
     if (!save || save[0] == 0) {
         if (chdir("/home") == -1)
             return (my_ret(84, comm));
-        my_own_setenv(env_list, "setenv PWD /home");
+        my_own_setenv(env_list, "setenv PWD /home", store);
         return (my_ret(0, comm));
     }
     chdir(save);
-    my_own_setenv(env_list, my_strcat("setenv PWD ", save, 1));
+    my_own_setenv(env_list, my_strcat("setenv PWD ", save), store);
     return (my_ret(0, comm));
 }
 
-int my_own_cd(node_t *env_list, char *buffer)
+int my_own_cd(node_t *env_list, char *buffer, store_t *store)
 {
     char **comm = my_str_to_word_array(buffer, " \t\n");
     int size = my_tab_len(comm);
@@ -49,14 +49,14 @@ int my_own_cd(node_t *env_list, char *buffer)
         turn = malloc(sizeof(char) * 4096);
     getcwd(turn, 4096);
     if (size == 2 && comm[1][0] == '-' && comm[1][1] == '\0') {
-        my_special_cd(save, comm, env_list);
+        my_special_cd(save, comm, env_list, store);
         save = my_strdup(turn);
         return (0);
     }
     if (size == 1) {
         save = my_strdup(turn);
         chdir("/home");
-        my_own_setenv(env_list, "setenv PWD /home");
+        my_own_setenv(env_list, "setenv PWD /home", store);
         return (my_ret(0, comm));
     }
     ((size = my_return_norm(comm, size)) == 0) ? save = my_strdup(turn) : 0;

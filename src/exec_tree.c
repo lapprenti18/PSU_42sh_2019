@@ -26,11 +26,11 @@ void close_and_dup(int new_fds[2], int fds[2], node_t *env_list, pid_t pid)
     dup2(new_fds[1], 1);
 }
 
-void exec_simple(char *command, node_t *env_list, char **tab, int fds[2])
+void exec_simple(char *command, char **tab, int fds[2], store_t *store)
 {
     pid_t pid = 0;
-    char **exec_tab = my_list_to_tab(env_list);
-    char *str = get_good_env(env_list);
+    char **exec_tab = my_list_to_tab(store->memory_env);
+    char *str = get_good_env(store->memory_env);
     int new_fds[2] = {dup(0), dup(1)};
 
     command = my_get_good_bin(str, command);
@@ -47,11 +47,11 @@ void exec_simple(char *command, node_t *env_list, char **tab, int fds[2])
         exit(0);
     } else
         wait(&pid);
-    close_and_dup(new_fds, fds, env_list, pid);
+    close_and_dup(new_fds, fds, store->env_list, pid);
     simple_ending(str, exec_tab, tab, pid);
 }
 
-void execute_pipe(tree_t *tree, node_t *env_list)
+void execute_pipe(tree_t *tree, node_t *env_list, store_t *store)
 {
     pid_t pid;
     int new_fd[2];
@@ -66,32 +66,33 @@ void execute_pipe(tree_t *tree, node_t *env_list)
     pid = fork();
     if (pid == 0) {
         close(new_fd[0]);
-        parse_tree(tree->left, env_list);
+        parse_tree(tree->left, env_list, store);
         close(new_fd[1]);
         exit(0);
     }
     close(new_fd[1]);
-    parse_tree(tree->right, env_list);
+    parse_tree(tree->right, env_list, store);
     wait(&pid);
 }
 
-int parse_tree(tree_t *tree, node_t *env_list)
+int parse_tree(tree_t *tree, node_t *env_list, store_t *store)
 {
     char **tab = NULL;
     int index = 0;
 
     if (!tree)
         return (1);
-    if (check_own(tree->command, env_list, tree->pipefds) || !tree->command)
+    if (check_own(tree->command, env_list, tree->pipefds, store) \
+    || !tree->command)
         return (1);
     while (index < 7) {
         if (!my_strcmp(sep_tab[index].sep, tree->command)) {
-            sep_tab[index].ptr(tree, env_list);
+            sep_tab[index].ptr(tree, env_list, store);
             return (1);
         }
         index += 1;
     }
     tab = my_str_to_word_array(tree->command, " \t\n");
-    exec_simple(tree->command, env_list, tab, tree->pipefds);
+    exec_simple(tree->command, tab, tree->pipefds, store);
     return (1);
 }

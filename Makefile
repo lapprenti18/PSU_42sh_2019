@@ -69,6 +69,7 @@ COMP	=	src/main.c	\
 			src/minishell_cd.c	\
 			src/minishell_setenv.c	\
 			src/minishell_unsetenv.c	\
+			src/modif_string.c	\
 			src/minishell_error_handling.c	\
 			src/minishell_list.c	\
 			src/minishell_free_list.c	\
@@ -76,6 +77,7 @@ COMP	=	src/main.c	\
 			src/minishell_two_loop.c	\
 			src/minishell_check_own.c	\
 			src/exec_tree.c	\
+			src/alias.c	\
 			src/minishell_parse_tree.c
 
 

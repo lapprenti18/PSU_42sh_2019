@@ -7,13 +7,14 @@
 
 #include "../include/my.h"
 
-static my_binaries_t tab[5] =
+static my_binaries_t tab[6] =
 {
     {"cd", my_own_cd},
     {"setenv", my_own_setenv},
     {"unsetenv", my_own_unsetenv},
     {"env", my_own_env},
-    {"exit", my_own_exit}
+    {"exit", my_own_exit},
+    {"alias", my_alias}
 };
 
 int good_return(char save, int ret, int temp, buffer_t *buff)
@@ -62,20 +63,21 @@ void my_draw_prompt(void)
     my_printf("$ ");
 }
 
-int check_own(char *buffer, node_t *env_list, int fds[2])
+int check_own(char *buffer, node_t *env_list, int fds[2], store_t *store)
 {
-    for (int i = 0; i < 5; i += 1) {
+    for (int i = 0; i < 6; i += 1) {
         if (my_strcmp(tab[i].command, buffer) == 0) {
             dup2(fds[0], 0);
             dup2(fds[1], 1);
-            env_list->ret_value = (tab[i].ptr(env_list, buffer) == 84) ? -1 : 0;
+            env_list->ret_value = (tab[i].ptr(env_list, \
+            buffer, store) == 84) ? -1 : 0;
             return (1);
         }
     }
     return (0);
 }
 
-int minishell_loop(node_t *env_list)
+int minishell_loop(node_t *env_list, store_t *store)
 {
     char *buffer = NULL;
     size_t size = 0;
@@ -89,8 +91,12 @@ int minishell_loop(node_t *env_list)
             my_draw_prompt();
         if (getline(&buffer, &size, stdin) == -1)
             return (my_tty());
+        buffer = change_buffer(buffer, store);
+        if (!buffer)
+            continue;
         buff.buffer = buffer;
+        buffer = NULL;
         my_tree = my_binary_tree(&buff, my_tree);
-    } while (parse_tree(my_tree, env_list));
+    } while (parse_tree(my_tree, env_list, store));
     return (free_list(env_list));
 }

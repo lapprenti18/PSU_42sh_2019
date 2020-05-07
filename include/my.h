@@ -31,6 +31,13 @@ typedef struct format_t
     void (*ptr)(va_list);
 } format_t;
 
+typedef struct alias_s
+{
+    char *prev;
+    char *new;
+    struct alias_s *next;
+} alias_t;
+
 typedef struct nodes_s
 {
     char *name;
@@ -52,35 +59,46 @@ typedef struct buffer_s
     char *buffer;
 } buffer_t;
 
+typedef struct store_s
+{
+    alias_t *alias;
+    node_t *memory_env;
+    node_t *env_list;
+} store_t;
+
 typedef struct my_binaries_s
 {
     char *command;
-    int (*ptr)(node_t *env_list, char *buffer);
+    int (*ptr)(node_t *env_list, char *buffer, store_t *);
 }my_binaries_t;
 
 typedef struct sep_s
 {
     char *sep;
-    void (*ptr)(tree_t *, node_t *);
+    void (*ptr)(tree_t *, node_t *, store_t *);
 } sep_t;
 
+char *change_buffer(char *buffer, store_t *store);
+int my_alias(node_t *env_list, char *buffer, store_t *store);
+alias_t *get_list_from_file(void);
 int good_return(char save, int ret, int temp, buffer_t *buff);
-void exec_double_pipe(tree_t *tree, node_t *env_list);
-void exec_simple(char *command, node_t *env_list, char **tab, int fds[2]);
+void exec_double_pipe(tree_t *tree, node_t *env_list, store_t *store);
+void exec_simple(char *command, char **tab, int fds[2], store_t *store);
 void little_print(void);
-void exec_double_and(tree_t *tree, node_t *env_list);
+void exec_double_and(tree_t *tree, node_t *env_list, store_t *store);
 int check_for_redirect(char c);
 int lasts_checks(buffer_t *buff, int ret, int position);
-void execute_pipe(tree_t *tree, node_t *env_list);
-void exec_double(tree_t *tree, node_t *env_list);
-void exec_redirect_right(tree_t *tree, node_t *env_list);
-void exec_double_redirect_right(tree_t *tree, node_t *env_list);
-void exec_redirect_left(tree_t *tree, node_t *env_list);
-void exec_tree_command(tree_t *tree, node_t *env_list);
+void execute_pipe(tree_t *tree, node_t *env_list, store_t *store);
+void exec_double(tree_t *tree, node_t *env_list, store_t *store);
+void exec_redirect_right(tree_t *tree, node_t *env_list, store_t *store);
+void exec_double_redirect_right(tree_t *tree, \
+node_t *env_list, store_t *store);
+void exec_redirect_left(tree_t *tree, node_t *env_list, store_t *store);
+void exec_tree_command(tree_t *tree, node_t *env_list, store_t *store);
 int simple_ending(char *str, char **exec_tab, char **tab, pid_t pid);
 int my_exec_command(char *command, node_t *env_list);
 void free_tree(tree_t *my_tree);
-int parse_tree(tree_t *tree, node_t *env_list);
+int parse_tree(tree_t *tree, node_t *env_list, store_t *store);
 int minishell_return(char **tab, char **exec_tab, char *str, pid_t pid);
 int exec_pipe(char *command_1, char *command_2, node_t *env_list);
 tree_t *my_binary_tree(buffer_t *buff, tree_t *my_tree);
@@ -88,7 +106,7 @@ tree_t *insert(tree_t *my_tree, char *command, int separator);
 tree_t *obtain_good_tree(buffer_t *buff, int cursor, tree_t *my_tree);
 int my_check_sep(char *buffer);
 int my_change_buffer(buffer_t *buff);
-int check_own(char *buffer, node_t *env_list, int fds[2]);
+int check_own(char *buffer, node_t *env_list, int fds[2], store_t *store);
 void minishell_gone_wrong(char *buffer, node_t *env_list);
 int my_check_minishelll_two(char *buffer);
 int free_list(node_t *env_list);
@@ -107,15 +125,15 @@ int return_and_free(char **tab, int number);
 int my_ret(int number, char **tab);
 int my_tty(void);
 void my_draw_prompt(void);
-int my_own_cd(node_t *env_list, char *buffer);
-int my_own_exit(node_t *env_list, char *buffer);
-int my_own_env(node_t *env_list, char *buffer);
-int my_own_setenv(node_t *env_list, char *buffer);
-int my_own_unsetenv(node_t *env_list, char *buffer);
+int my_own_cd(node_t *env_list, char *buffer, store_t *store);
+int my_own_exit(node_t *env_list, char *buffer, store_t *store);
+int my_own_env(node_t *env_list, char *buffer, store_t *store);
+int my_own_setenv(node_t *env_list, char *buffer, store_t *store);
+int my_own_unsetenv(node_t *env_list, char *buffer, store_t *store);
 char *get_good_env(node_t *env_list);
 char *my_get_good_bin(char *env, char *buffer);
 void my_free_tab(char **tab);
-int minishell_loop(node_t *env_list);
+int minishell_loop(node_t *env_list, store_t *store);
 int    my_putnbr_base(int nbr, char const *base);
 int    my_compute_power_rec(int nb, int p);
 int    my_compute_square_root(int nb);
@@ -134,7 +152,7 @@ int    my_showstr(char const *str);
 int    my_show_word_array(char * const *tab);
 void    my_sort_int_array(int *tab, int size);
 char    *my_strcapitalize(char *str);
-char    *my_strcat(char *dest, char *src, int check);
+char    *my_strcat(char *dest, char *src);
 char    my_strcmp(char *s1, char *s2);
 char    *my_strcpy(char *dest, char const *src);
 char    *my_strcpy2(char *dest, char const *src);
