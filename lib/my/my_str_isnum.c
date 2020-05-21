@@ -13,6 +13,8 @@ int is_char_num(char c)
 int    my_str_isnum(char const *str)
 {
     for (int current = 0; str[current]; current += 1) {
+        if (current == 0 && str[current] == '-')
+            continue;
         if (!is_char_num(str[current]))
             return (0);
     }

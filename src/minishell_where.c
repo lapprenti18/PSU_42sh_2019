@@ -55,7 +55,7 @@ int my_own_which_2(char **arr, store_t *store, int i)
     int check = 0;
 
     if ((alias = isalias(arr[i], store)))
-        printf("%s:\taliased to %s\n", arr[i], alias);
+        printf("%s: \t aliased to %s\n", arr[i], alias);
     if (alias == NULL && (alias = isbuiltin(arr[i])))
         printf("%s: shell built-in command.\n", arr[i]);
     if (alias == NULL && (alias = \
