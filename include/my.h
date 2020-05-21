@@ -81,7 +81,7 @@ typedef struct sep_s
     void (*ptr)(tree_t *, node_t *, store_t *);
 } sep_t;
 
-extern const my_binaries_t bin_tab[11];
+extern const my_binaries_t bin_tab[12];
 
 void add_alias(alias_t **alias, char *prev, char *new);
 int my_own_set(node_t *env_list, char *buffer, store_t *store);
@@ -225,5 +225,6 @@ void my_printf(char *format, ...);
 int my_own_where(node_t *env_list, char *buffer, store_t *store);
 int my_own_which(node_t *env_list, char *buffer, store_t *store);
 int my_own_repeat(node_t *env_list, char *buffer, store_t *store);
+int my_own_foreach(node_t *env_list, char *buffer, store_t *store);
 
 #endif /* MY_H_ */

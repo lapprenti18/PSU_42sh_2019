@@ -39,6 +39,30 @@ int check_alias(char **new_buffer, char **tab, store_t *store)
     return (check);
 }
 
+char *check_for_var(char *str, store_t *store)
+{
+    if (str[0] != '$')
+        return (str);
+    for (alias_t *var = store->variables; var; var = var->next)
+        if (!my_strcmp(&str[1], var->prev))
+            return (my_strdup(var->new));
+    printf("%s: Undefined variable.\n", &str[1]);
+    return (str);
+}
+
+char *check_var(char *buffer, store_t *store)
+{
+    char **tab = my_str_to_word_array(buffer, "\t ");
+    char *new_buffer = NULL;
+
+    for (int i = 0; tab[i]; i += 1) {
+        tab[i] = check_for_var(tab[i], store);
+        new_buffer = my_strcat(new_buffer, tab[i]);
+        new_buffer = my_strcat(new_buffer, " ");
+    }
+    return (new_buffer);
+}
+
 char *change_buffer(char *buffer, store_t *store)
 {
     char **tab = my_str_to_word_array(buffer, "\n \t");
@@ -50,6 +74,7 @@ char *change_buffer(char *buffer, store_t *store)
     check = check_alias(&new_buffer, tab, store);
     if (check)
         return (change_buffer(new_buffer, store));
+    new_buffer = check_var(new_buffer, store);
     for (alias_t *alias = store->alias; alias; alias = alias->next)
         alias->loop = false;
     if (check == -1)

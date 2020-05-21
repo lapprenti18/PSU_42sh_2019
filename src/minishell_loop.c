@@ -7,7 +7,7 @@
 
 #include "../include/my.h"
 
-const my_binaries_t bin_tab[11] =
+const my_binaries_t bin_tab[12] =
 {
     {"cd", my_own_cd},
     {"setenv", my_own_setenv},
@@ -19,6 +19,7 @@ const my_binaries_t bin_tab[11] =
     {"which", my_own_which},
     {"set", my_own_set},
     {"repeat", my_own_repeat},
+    {"foreach", my_own_foreach},
     {NULL, NULL}
 };
 
