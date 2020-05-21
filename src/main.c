@@ -56,7 +56,7 @@ int main(int ac, char *av[], char **env)
 {
     store_t store;
 
-    store.alias = get_list_from_file();
+    get_list_from_file(&store);
     store.memory_env = my_env_to_list(NULL, env);
     store.env_list = my_env_to_list(NULL, env);
     signal(SIGINT, sigint_handler);

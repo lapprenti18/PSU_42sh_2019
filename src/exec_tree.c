@@ -33,7 +33,7 @@ void exec_simple(char *command, char **tab, int fds[2], store_t *store)
     char *str = get_good_env(store->memory_env);
     int new_fds[2] = {dup(0), dup(1)};
 
-    command = my_get_good_bin(str, command);
+    command = my_get_good_bin(str, command, 0);
     if (!command)
         return;
     pid = fork();

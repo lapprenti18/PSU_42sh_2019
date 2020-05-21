@@ -54,7 +54,7 @@ char *my_special_str_dup(char *env, char *buffer)
     return (path);
 }
 
-char *my_get_good_bin(char *env, char *buffer)
+char *my_get_good_bin(char *env, char *buffer, int i)
 {
     char *result = NULL;
     char **tab = my_str_to_word_array(buffer, " \t\n");
@@ -73,5 +73,7 @@ char *my_get_good_bin(char *env, char *buffer)
         if (access(result, X_OK) == 0)
             return (result);
     }
+    if (i == 1)
+        return (NULL);
     return (easy_ret(tab[0]));
 }

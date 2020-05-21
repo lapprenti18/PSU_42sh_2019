@@ -66,6 +66,7 @@ typedef struct store_s
     alias_t *alias;
     node_t *memory_env;
     node_t *env_list;
+    alias_t *variables;
 } store_t;
 
 typedef struct my_binaries_s
@@ -80,10 +81,12 @@ typedef struct sep_s
     void (*ptr)(tree_t *, node_t *, store_t *);
 } sep_t;
 
+extern const my_binaries_t bin_tab[9];
+
 char *read_file(char *filepath);
 char *change_buffer(char *buffer, store_t *store);
 int my_alias(node_t *env_list, char *buffer, store_t *store);
-alias_t *get_list_from_file(void);
+void get_list_from_file(store_t *store);
 int good_return(char save, int ret, int temp, buffer_t *buff);
 void exec_double_pipe(tree_t *tree, node_t *env_list, store_t *store);
 void exec_simple(char *command, char **tab, int fds[2], store_t *store);
@@ -134,7 +137,7 @@ int my_own_env(node_t *env_list, char *buffer, store_t *store);
 int my_own_setenv(node_t *env_list, char *buffer, store_t *store);
 int my_own_unsetenv(node_t *env_list, char *buffer, store_t *store);
 char *get_good_env(node_t *env_list);
-char *my_get_good_bin(char *env, char *buffer);
+char *my_get_good_bin(char *env, char *buffer, int i);
 void my_free_tab(char **tab);
 int minishell_loop(node_t *env_list, store_t *store);
 int    my_putnbr_base(int nbr, char const *base);
@@ -217,5 +220,7 @@ void my_print_b(va_list ap);
 void my_print_u(va_list ap);
 void my_print_upcase_s(va_list ap);
 void my_printf(char *format, ...);
+int my_own_where(node_t *env_list, char *buffer, store_t *store);
+int my_own_which(node_t *env_list, char *buffer, store_t *store);
 
 #endif /* MY_H_ */

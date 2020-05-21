@@ -7,14 +7,17 @@
 
 #include "../include/my.h"
 
-static my_binaries_t tab[6] =
+const my_binaries_t bin_tab[9] =
 {
     {"cd", my_own_cd},
     {"setenv", my_own_setenv},
     {"unsetenv", my_own_unsetenv},
     {"env", my_own_env},
     {"exit", my_own_exit},
-    {"alias", my_alias}
+    {"alias", my_alias},
+    {"where", my_own_where},
+    {"which", my_own_which},
+    {NULL, NULL}
 };
 
 int good_return(char save, int ret, int temp, buffer_t *buff)
@@ -65,11 +68,11 @@ void my_draw_prompt(void)
 
 int check_own(char *buffer, node_t *env_list, int fds[2], store_t *store)
 {
-    for (int i = 0; i < 6; i += 1) {
-        if (my_strcmp(tab[i].command, buffer) == 0) {
+    for (int i = 0; bin_tab[i].command != NULL; i += 1) {
+        if (my_strcmp(bin_tab[i].command, buffer) == 0) {
             dup2(fds[0], 0);
             dup2(fds[1], 1);
-            env_list->ret_value = (tab[i].ptr(env_list, \
+            env_list->ret_value = (bin_tab[i].ptr(env_list, \
             buffer, store) == 84) ? -1 : 0;
             return (1);
         }

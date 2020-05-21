@@ -76,8 +76,10 @@ COMP	=	src/main.c	\
 			src/minishell_check_special.c	\
 			src/minishell_two_loop.c	\
 			src/minishell_check_own.c	\
+			src/minishell_where.c	\
 			src/exec_tree.c	\
 			src/alias.c	\
+			src/variables.c	\
 			src/minishell_parse_tree.c
 
 

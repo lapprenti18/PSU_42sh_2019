@@ -50,14 +50,15 @@ int my_alias(node_t *env_list, char *buffer, store_t *store)
     if (tab[0] && tab[1] && tab[2]) {
         for (int index = 2; tab[index]; index += 1) {
             new = my_strcat(new, tab[index]);
-            new = my_strcat(new, " ");
+            if (tab[index + 1])
+                new = my_strcat(new, " ");
         }
         return (check_exist(store, tab, new));
     }
     return (84);
 }
 
-void try_to_add_alias(char *line, alias_t **alias)
+void try_to_add_alias(char *line, store_t *store)
 {
     char **tab = my_str_to_word_array(line, " \t");
     char *new = NULL;
@@ -68,21 +69,22 @@ void try_to_add_alias(char *line, alias_t **alias)
             if (tab[index + 1])
                 new = my_strcat(new, " ");
         }
-        add_alias(alias, tab[1], new);
-    }
+        add_alias(&store->alias, tab[1], new);
+    } else if (tab[0] && tab[1] && !tab[2])
+        add_alias(&store->variables, tab[0], tab[1]);
 }
 
-alias_t *get_list_from_file(void)
+void get_list_from_file(store_t *store)
 {
-    alias_t *alias = NULL;
     int fd = open(".42shrc", O_RDONLY | O_CREAT, 0644);
     char *buffer = read_file(".42shrc");
     char **tab = my_str_to_word_array(buffer, "\n");
 
+    store->alias = NULL;
+    store->variables = NULL;
     if (!fd || !tab || !tab[0])
-        return (NULL);
+        return;
     for (int index = 0; tab[index]; index += 1)
-        try_to_add_alias(tab[index], &alias);
+        try_to_add_alias(tab[index], store);
     close(fd);
-    return (alias);
 }
