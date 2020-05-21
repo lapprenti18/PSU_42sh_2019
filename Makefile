@@ -80,6 +80,7 @@ COMP	=	src/main.c	\
 			src/exec_tree.c	\
 			src/alias.c	\
 			src/variables.c	\
+			src/minishell_repeat.c	\
 			src/minishell_parse_tree.c
 
 
