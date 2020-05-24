@@ -226,5 +226,8 @@ int my_own_where(node_t *env_list, char *buffer, store_t *store);
 int my_own_which(node_t *env_list, char *buffer, store_t *store);
 int my_own_repeat(node_t *env_list, char *buffer, store_t *store);
 int my_own_foreach(node_t *env_list, char *buffer, store_t *store);
+char *isalias(char *cmd, store_t *store);
+char *isbuiltin(char *cmd);
+char *my_special_str_dup(char *env, char *buffer);
 
 #endif /* MY_H_ */
