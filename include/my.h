@@ -279,5 +279,8 @@ char *path(node_t *env_list);
 char *path_to_history(node_t *env_list);
 int my_own_history(node_t *env_list, char *buffer, store_t *store);
 char *bufferito(store_t *store, node_t *env_list);
+char *isalias(char *cmd, store_t *store);
+char *isbuiltin(char *cmd);
+char *my_special_str_dup(char *env, char *buffer);
 
 #endif /* MY_H_ */

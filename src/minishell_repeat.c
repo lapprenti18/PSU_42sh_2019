@@ -7,6 +7,24 @@
 
 #include "../include/my.h"
 
+char *isalias(char *cmd, store_t *store)
+{
+    for (alias_t *alias = store->alias; alias; alias = alias->next) {
+        if (!my_strcmp(cmd, alias->prev))
+            return (alias->new);
+    }
+    return (NULL);
+}
+
+char *isbuiltin(char *cmd)
+{
+    for (int i = 0; bin_tab[i].command; i++) {
+        if (!my_strcmp(cmd, bin_tab[i].command))
+            return ("ui");
+    }
+    return (NULL);
+}
+
 int exec_one_command(char *command, store_t *store, char **tab)
 {
     pid_t pid = 0;

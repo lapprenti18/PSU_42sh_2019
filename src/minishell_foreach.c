@@ -11,8 +11,11 @@ int my_own_foreach(node_t *env_list, char *buffer, store_t *store)
 {
     int end = 1;
 
+    (void)env_list;
+    (void)buffer;
+    (void)store;
     while (end) {
-        printf("foreach? ");
+        printf("foreach? \n");
         end = 0;
     }
     return (0);
