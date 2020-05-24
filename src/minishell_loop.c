@@ -7,7 +7,7 @@
 
 #include "../include/my.h"
 
-const my_binaries_t bin_tab[12] =
+const my_binaries_t bin_tab[13] =
 {
     {"cd", my_own_cd},
     {"setenv", my_own_setenv},
@@ -20,6 +20,7 @@ const my_binaries_t bin_tab[12] =
     {"set", my_own_set},
     {"repeat", my_own_repeat},
     {"foreach", my_own_foreach},
+    {"history", my_own_history},
     {NULL, NULL}
 };
 
@@ -90,13 +91,15 @@ int minishell_loop(node_t *env_list, store_t *store)
     tree_t *my_tree = NULL;
     buffer_t buff;
 
+    store->historique = malloc(sizeof(historique_t));
     do {
         free_tree(my_tree);
         my_tree = NULL;
-        if (isatty(0))
-            my_draw_prompt();
-        if (getline(&buffer, &size, stdin) == -1)
-            return (my_tty());
+        if (isatty(0) > 0) {
+            buffer = bufferito(store, env_list);
+        } else
+            if (getline(&buffer, &size, stdin) == -1)
+                return (my_tty());
         if (!buffer)
             continue;
         buff.buffer = buffer;

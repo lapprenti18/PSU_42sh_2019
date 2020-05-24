@@ -61,8 +61,7 @@ SRC	=	lib/my/my_putnbr_base.c	\
 
 NAME	=	42sh
 
-COMP	=	src/main.c	\
-			src/minishell_loop.c	\
+COMP	=	src/minishell_loop.c	\
 			src/minishell_nodes.c	\
 			src/minishell_bin.c	\
 			src/minishell_owns_functions.c	\
@@ -76,23 +75,84 @@ COMP	=	src/main.c	\
 			src/minishell_check_special.c	\
 			src/minishell_two_loop.c	\
 			src/minishell_check_own.c	\
-			src/minishell_where.c	\
 			src/exec_tree.c	\
 			src/alias.c	\
+			src/minishell_parse_tree.c	\
+			src/chek_key.c	\
+			src/getline.c	\
+			src/tab_lenght.c	\
+			src/delet.c	\
+			src/fill.c	\
+			src/add_key.c	\
+			src/rewrite.c	\
+			src/test.c	\
+			src/down.c	\
+			src/up.c	\
+			src/control_c.c	\
+			src/path.c	\
+			src/minishell_where.c	\
 			src/variables.c	\
 			src/minishell_repeat.c	\
 			src/minishell_foreach.c	\
-			src/minishell_parse_tree.c
+			src/minishell_history.c	\
+			src/buffer.c
 
+MAIN	=	src/main.c
 
-CFLAGS  =	-W -Wall -Wextra -Iinclude
+TESTS	=	tests/criterion.c	\
+			tests/test_criterion.c	\
+			tests/test_my_str_isnum.c	\
+			tests/test_my_str_isupper.c	\
+			tests/test_my_strlen.c	\
+			tests/test_my_str_lowcase.c	\
+			tests/test_my_strncat.c	\
+			tests/test_my_strncmp.c	\
+			tests/test_my_strstr.c	\
+			tests/test_my_str_to_word_array.c	\
+			tests/test_my_strupcase.c	\
+			tests/test_my_swap.c	\
+			tests/test_str_isprintable.c	\
+			tests/test_strncpy.c	\
+			tests/test_my_find_prime_sup.c	\
+			tests/test_my_getnbr.c	\
+			tests/test_my_isneg.c	\
+			tests/test_my_is_prime.c	\
+			tests/test_my_putchar.c	\
+			tests/test_my_put_nbr.c	\
+			tests/test_my_putnbr_base.c	\
+			tests/test_my_putstr.c	\
+			tests/test_my_revstr.c	\
+			tests/test_my_showmem.c	\
+			tests/test_my_showstr.c	\
+			tests/test_my_strcapitalize.c	\
+			tests/test_my_strcat.c	\
+			tests/test_my_strcmp.c	\
+			tests/test_my_strcpy.c	\
+			tests/test_my_str_isalpha.c	\
+			tests/test_my_str_islower.c
 
-OBJ	=	$(SRC:.c=.o)
+CFLAGS  =	-W -Wall -Wextra -Iinclude -g3
+
+OBJ	=	$(SRC:.c=.o) $(MAIN:.c=.o)
+
+CFLAGS_TESTS	=	--coverage -lcriterion
+
+OBJ_TESTS	=	$(COMP:.c=.o) $(SRC:.c=.o) $(TESTS:.c=.o)
+
 
 all	:	$(NAME)
 
 $(NAME)	: $(OBJ)
 	gcc -o $(NAME) $(OBJ) $(COMP) $(CFLAGS)
+
+
+unit_tests:	$(OBJ_TESTS)
+	$(CC) -o $@ $^ $(CFLAGS) $(CFLAGS_TESTS)
+	./$@
+
+tests_run:	CFLAGS	+=	$(CFLAGS_TESTS)
+
+tests_run:	unit_tests
 
 clean	:
 	rm -f *.gcno
@@ -102,5 +162,7 @@ clean	:
 fclean	: clean
 	rm -f test
 	rm -f $(NAME)
+	rm -f unit_tests
+
 
 re	: fclean all

@@ -25,6 +25,15 @@
 #include <sys/sysmacros.h>
 #include <signal.h>
 #include <stdbool.h>
+#include <termios.h>
+
+#define UP 65
+#define DOWN 66
+#define LEFT 68
+#define RIGHT 67
+#define DELETE 127
+
+int ctr_c;
 
 typedef struct format_t
 {
@@ -61,12 +70,26 @@ typedef struct buffer_s
     char *buffer;
 } buffer_t;
 
+typedef struct historique_s
+{
+    int dir;
+    char *cmd;
+    int boool;
+    int key_pressed;
+    int cursor_pos;
+    int history_pos;
+    char **history;
+    char *where;
+}historique_t;
+
 typedef struct store_s
 {
     alias_t *alias;
     node_t *memory_env;
     node_t *env_list;
     alias_t *variables;
+    historique_t *historique;
+
 } store_t;
 
 typedef struct my_binaries_s
@@ -81,7 +104,7 @@ typedef struct sep_s
     void (*ptr)(tree_t *, node_t *, store_t *);
 } sep_t;
 
-extern const my_binaries_t bin_tab[12];
+extern const my_binaries_t bin_tab[13];
 
 void add_alias(alias_t **alias, char *prev, char *new);
 int my_own_set(node_t *env_list, char *buffer, store_t *store);
@@ -226,5 +249,35 @@ int my_own_where(node_t *env_list, char *buffer, store_t *store);
 int my_own_which(node_t *env_list, char *buffer, store_t *store);
 int my_own_repeat(node_t *env_list, char *buffer, store_t *store);
 int my_own_foreach(node_t *env_list, char *buffer, store_t *store);
+char *my_getline(historique_t *historique, node_t *env_list);
+void check_key(historique_t *historique, char *open_history);
+int kbhit (void);
+void changemode(int dir);
+void init_stat(historique_t *historique, char *open_history, node_t *env_list);
+void check_key_dir(historique_t *historique);
+char *str_cpy(char *str_two);
+int my_tab_lenght(char **tab);
+char *my_strcat_str_c(char *word, char c);
+char *delete_key(historique_t *historique);
+void delete(historique_t *historique, int lenght);
+char *fill(char *av);
+void fill_history(historique_t *historique);
+char *add_letter(historique_t *historique);
+void my_memsete(char *word, char c, int temp);
+void modif_histo(historique_t *historique);
+void modif_histo_two(historique_t *historique);
+void my_memset(char *buffer, int size, char c);
+void sigint_handler(int sig_num);
+char **my_tab_special(char **tab);
+void down_histo(historique_t *historique);
+void down_current(historique_t *historique);
+void up_curent(historique_t *historique);
+void up_histo(historique_t *historique);
+void control_c(historique_t *historique);
+char *return_getline(historique_t *historique);
+char *path(node_t *env_list);
+char *path_to_history(node_t *env_list);
+int my_own_history(node_t *env_list, char *buffer, store_t *store);
+char *bufferito(store_t *store, node_t *env_list);
 
 #endif /* MY_H_ */
