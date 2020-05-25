@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2019
+** tests
+** File description:
+** test_my_strncmp.c
+*/
+
 #include <criterion/criterion.h>
 
 int my_strncmp(const char *s1, const char *s2, int nb);

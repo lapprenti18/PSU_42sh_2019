@@ -37,5 +37,6 @@ Test(my_str_isprintable, test_with_space)
     char str[] = "hello world";
     int result = my_str_isprintable(str);
 
-    cr_assert_eq(result, 1, "The actual value is %d but the expected value must be 1.", result);
+    cr_assert_eq(result, 1, \
+    "The actual value is %d but the expected value must be 1.", result);
 }

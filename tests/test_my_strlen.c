@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2019
+** tests
+** File description:
+** test_my_strlen.c
+*/
+
 #include<criterion/criterion.h>
 
 int my_strlen(char const *str);

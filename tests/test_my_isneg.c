@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT2019
-** test my_isneg
+** EPITECH PROJECT, 2019
+** tests
 ** File description:
-** my_isneg tester
+** test_my_isneg.c
 */
 
 #include <criterion/criterion.h>

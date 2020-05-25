@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2019
+** tests
+** File description:
+** test_my_str_to_word_array.c
+*/
+
 #include <criterion/criterion.h>
 
 char **my_str_to_word_array(char *);

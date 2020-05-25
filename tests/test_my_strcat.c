@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2019
+** tests
+** File description:
+** test_my_strcat.c
+*/
+
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 

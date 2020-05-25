@@ -4,24 +4,25 @@
 ** File description:
 ** test_lib
 */
-#include "my.h"
 
+#include "my.h"
 #include <criterion/criterion.h>
 
 Test(my_str_isnum, return_1)
 {
     int i = 0;
     char str[] = "23456754323456787654";
-    i = my_str_isnum(str);
 
-    cr_assert_eq(i, 1, "The actual value is %d but the expected value must be 1.", i);
+    i = my_str_isnum(str);
+    cr_assert_eq(i, 1, "The actual value \
+    is %d but the expected value must be 1.", i);
 }
 
 Test(my_str_isnum, return_0_nummaj)
 {
     int i = 0;
     char str[] = "12345SDFGX";
-    
+
     i = my_str_isnum(str);
     cr_assert_eq(i, 0);
 }
@@ -32,7 +33,8 @@ Test(my_str_isnum, return_1_numspace)
     char str[] = "12345 123456";
 
     i = my_str_isnum(str);
-    cr_assert_eq(i, 1, "The actual value is %d but the expected value must be 1.", i);
+    cr_assert_eq(i, 1, "The actual value \
+    is %d but the expected value must be 1.", i);
 }
 
 Test(my_str_isnum, return_0_maj_space)
